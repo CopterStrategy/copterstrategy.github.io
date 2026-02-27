@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>[[COPTER]] — Cinematic Portfolio</title>
+  <meta name="description" content="[[คำอธิบายสั้นๆ: ตัดต่อ/ครีเอทีฟ/แอด]]" />
+
+  <style>
+    :root{
+      /* Cinematic palette */
+      --bg:#07090d;
+      --panel:#0b0f18;
+      --panel2:#0a0d14;
+      --text:#eef2ff;
+      --muted:rgba(238,242,255,.68);
+      --line:rgba(255,255,255,.10);
+      --shadow: 0 28px 90px rgba(0,0,0,.55);
+
+      /* Accent (film-grade glow) */
+      --accent:#7c5cff;  /* violet */
+      --gold:#f5d48f;    /* warm highlight */
+      --green:#23c55e;   /* subtle secondary */
+
+      --radius:20px;
+      --max: 1140px;
+
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans Thai", "Noto Sans", Arial;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background: var(--bg);
+      line-height:1.65;
+      overflow-x:hidden;
+    }
+
+    /* Film grain + vignette */
+    body::before{
+      content:"";
+      position:fixed; inset:-20%;
+      background:
+        radial-gradient(1200px 600px at 10% 0%, rgba(124,92,255,.18), transparent 60%),
+        radial-gradient(900px 520px at 92% 8%, rgba(245,212,143,.10), transparent 60%),
+        radial-gradient(900px 520px at 75% 95%, rgba(35,197,94,.08), transparent 60%),
+        radial-gradient(900px 520px at 5% 95%, rgba(255,255,255,.05), transparent 60%);
+      filter:saturate(1.05) contrast(1.05);
+      pointer-events:none;
+      z-index:-3;
+    }
+    body::after{
+      content:"";
+      position:fixed; inset:0;
+      background:
+        radial-gradient(80% 60% at 50% 35%, transparent 45%, rgba(0,0,0,.55) 100%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.26'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+      opacity:.28;
+      pointer-events:none;
+      z-index:-2;
+    }
+
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:var(--max); margin:0 auto; padding:26px 20px 90px}
+
+    /* NAV */
+    .nav{
+      position:sticky; top:0; z-index:10;
+      backdrop-filter: blur(12px);
+      background: rgba(7,9,13,.55);
+      border-bottom:1px solid var(--line);
+    }
+    .navin{
+      max-width:var(--max); margin:0 auto;
+      padding:14px 20px;
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:12px;
+      font-weight:750; letter-spacing:.2px;
+    }
+    .sig{
+      width:10px; height:10px; border-radius:50%;
+      background: linear-gradient(135deg, var(--accent), rgba(245,212,143,.9));
+      box-shadow: 0 0 28px rgba(124,92,255,.55), 0 0 40px rgba(245,212,143,.18);
+    }
+    .menu{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+    .menu a{
+      color:var(--muted); font-size:14px;
+      padding:8px 10px; border-radius:12px;
+    }
+    .menu a:hover{
+      background:rgba(255,255,255,.06);
+      color:rgba(238,242,255,.92);
+    }
+
+    /* Buttons */
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:10px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color:rgba(238,242,255,.92);
+      font-size:14px;
+      gap:8px;
+      transition: transform .15s ease, filter .15s ease, background .15s ease;
+    }
+    .btn:hover{background:rgba(255,255,255,.09); transform: translateY(-1px)}
+    .btn.primary{
+      border-color: rgba(124,92,255,.35);
+      background:
+        linear-gradient(135deg, rgba(124,92,255,.95), rgba(124,92,255,.55));
+      box-shadow: 0 22px 65px rgba(124,92,255,.22);
+    }
+    .btn.primary:hover{filter:brightness(1.06)}
+    .btn.gold{
+      border-color: rgba(245,212,143,.28);
+      background: linear-gradient(135deg, rgba(245,212,143,.55), rgba(245,212,143,.18));
+      box-shadow: 0 22px 65px rgba(245,212,143,.12);
+      color: rgba(255,255,255,.92);
+    }
+
+    /* Cards */
+    .card{
+      border-radius:var(--radius);
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.025));
+      box-shadow: var(--shadow);
+    }
+
+    /* HERO */
+    .hero{
+      padding:52px 0 24px;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:16px;
+      align-items:stretch;
+    }
+    .hero .left{padding:28px}
+    .kicker{
+      color:rgba(245,212,143,.88);
+      font-size:12px;
+      letter-spacing:.26em;
+      text-transform:uppercase;
+      font-family:var(--mono);
+    }
+    h1{
+      margin:14px 0 12px;
+      font-size:48px;
+      line-height:1.08;
+      letter-spacing:-.02em;
+      text-shadow: 0 0 24px rgba(124,92,255,.10);
+    }
+    .sub{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+      max-width:65ch;
+    }
+    .cta{margin-top:18px; display:flex; gap:10px; flex-wrap:wrap}
+    .tags{margin-top:18px; display:flex; gap:8px; flex-wrap:wrap}
+    .tag{
+      font-family:var(--mono);
+      font-size:12px;
+      color: rgba(238,242,255,.78);
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.20);
+      padding:8px 10px;
+      border-radius:999px;
+    }
+    .hero .right{padding:18px; display:flex; flex-direction:column; gap:12px}
+    .mini{
+      padding:14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.24);
+    }
+    .mini h3{margin:0 0 6px; font-size:14px}
+    .mini p{margin:0; color:var(--muted); font-size:13px}
+
+    .stats{display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
+    .stat{padding:14px}
+    .stat .num{
+      font-size:18px; font-weight:850;
+      background: linear-gradient(135deg, rgba(238,242,255,.92), rgba(245,212,143,.75));
+      -webkit-background-clip:text; background-clip:text;
+      color:transparent;
+    }
+    .stat .lbl{color:rgba(238,242,255,.55); font-size:12px}
+
+    /* Sections */
+    .section{margin-top:26px}
+    .section h2{margin:0 0 10px; font-size:22px}
+    .lead{margin:0 0 14px; color:var(--muted)}
+
+    /* Featured Work grid */
+    .work{display:grid; grid-template-columns:repeat(3,1fr); gap:12px}
+    .w{padding:14px; display:flex; flex-direction:column; gap:10px}
+    .thumb{
+      aspect-ratio:16/9;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(120% 120% at 20% 10%, rgba(124,92,255,.18), transparent 55%),
+        radial-gradient(120% 120% at 85% 20%, rgba(245,212,143,.10), transparent 55%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.26));
+      position:relative;
+      overflow:hidden;
+      display:flex; align-items:center; justify-content:center;
+      font-family:var(--mono);
+      color:rgba(238,242,255,.70);
+      font-size:12px;
+    }
+    .thumb::after{
+      /* cinematic “light leak” */
+      content:"";
+      position:absolute; inset:-40%;
+      background: conic-gradient(from 180deg, transparent 0 55%, rgba(245,212,143,.14) 65%, transparent 75% 100%);
+      transform: rotate(8deg);
+      filter: blur(18px);
+      opacity:.55;
+    }
+    .meta{display:flex; gap:8px; flex-wrap:wrap}
+    .pill{
+      font-size:12px;
+      color:rgba(238,242,255,.80);
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      padding:6px 10px;
+      border-radius:999px;
+    }
+    .w h3{margin:0; font-size:16px}
+    .w p{margin:0; color:var(--muted); font-size:14px}
+    .w a.link{
+      color:rgba(245,212,143,.92);
+      text-decoration:underline;
+      text-underline-offset:3px;
+      font-size:13px;
+    }
+
+    /* Case Studies */
+    .grid{display:grid; gap:12px}
+    .grid.cols2{grid-template-columns:repeat(2,1fr)}
+    .case{padding:18px}
+    .case .top{display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap}
+    .case h3{margin:0; font-size:16px}
+    .case .k{color:var(--muted); font-size:13px}
+    .case .cols{margin-top:12px; display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
+    .box{
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+    }
+    .box b{display:block; font-size:12px; font-family:var(--mono); color:rgba(245,212,143,.90); margin-bottom:6px}
+    .box span{color:var(--muted); font-size:13px}
+
+    /* Services */
+    .grid.cols3{grid-template-columns:repeat(3,1fr)}
+    .item{padding:16px}
+    .item h3{margin:0 0 8px; font-size:16px}
+    .item p{margin:0; color:var(--muted); font-size:14px}
+
+    /* Workflow */
+    .process{padding:18px}
+    .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:10px}
+    .step{padding:14px}
+    .step .n{font-family:var(--mono); font-size:12px; color:rgba(245,212,143,.80)}
+    .step h4{margin:6px 0 6px; font-size:14px}
+    .step p{margin:0; color:var(--muted); font-size:13px}
+
+    /* Pricing */
+    .price{padding:18px}
+    .price .cards{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:10px}
+    .pc{padding:16px}
+    .pc .t{display:flex; justify-content:space-between; gap:10px; align-items:center}
+    .pc h3{margin:0; font-size:16px}
+    .range{font-family:var(--mono); font-size:12px; color:rgba(238,242,255,.78)}
+    ul{margin:10px 0 0 18px; color:var(--muted); font-size:14px}
+    li{margin:6px 0}
+
+    /* FAQ */
+    .faq{padding:18px}
+    details{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.20);
+      border-radius:14px;
+      padding:12px 14px;
+    }
+    details + details{margin-top:10px}
+    summary{cursor:pointer; font-weight:700}
+    details p{margin:10px 0 0; color:var(--muted)}
+
+    /* Contact */
+    .contact{padding:18px; display:grid; grid-template-columns:1fr 1fr; gap:12px}
+    .contact .box2{
+      padding:14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+    }
+    .smalllink{color:rgba(245,212,143,.92); text-decoration:underline; text-underline-offset:3px}
+    label{display:block; margin:10px 0 6px; font-family:var(--mono); font-size:12px; color:rgba(238,242,255,.70)}
+    input,textarea{
+      width:100%;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      padding:10px 12px;
+      color:var(--text);
+      outline:none;
+      font-family:var(--sans);
+    }
+    textarea{min-height:110px; resize:vertical}
+
+    .foot{
+      margin-top:24px;
+      color:rgba(238,242,255,.55);
+      font-size:13px;
+      display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero{grid-template-columns:1fr}
+      .work{grid-template-columns:1fr 1fr}
+      .grid.cols2{grid-template-columns:1fr}
+      .grid.cols3{grid-template-columns:1fr}
+      .steps{grid-template-columns:1fr 1fr}
+      .price .cards{grid-template-columns:1fr}
+      .contact{grid-template-columns:1fr}
+      .stats{grid-template-columns:1fr}
+    }
+    @media (max-width: 520px){
+      h1{font-size:36px}
+      .work{grid-template-columns:1fr}
+      .steps{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <div class="nav">
+    <div class="navin">
+      <div class="brand">
+        <span class="sig"></span>
+        <span>[[COPTER]]</span>
+      </div>
+      <div class="menu">
+        <a href="#work">ผลงาน</a>
+        <a href="#cases">เคส</a>
+        <a href="#services">บริการ</a>
+        <a href="#pricing">เรตราคา</a>
+        <a href="#contact">ติดต่อ</a>
+        <a class="btn primary" href="[[LINE_LINK]]">ทักไลน์ / ขอคิวงาน</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="card left">
+        <div class="kicker">[[CINEMATIC EDITING • ADS • MOTION]]</div>
+        <h1>ตัดต่อแบบ “ฟิล์ม” ที่ทำให้คนหยุดดู และทำให้แบรนด์ได้ผลลัพธ์</h1>
+        <p class="sub">
+          [[สรุปสั้นๆ 1–2 บรรทัด: รับตัดต่อ/โมชั่น/โฆษณา เน้นจังหวะคม ภาพดูแพง โครงเรื่องขายของได้]]
+        </p>
+
+        <div class="cta">
+          <a class="btn primary" href="[[LINE_LINK]]">ขอคิวงาน</a>
+          <a class="btn gold" href="#work">ดูผลงานเด่น</a>
+          <a class="btn" href="[[MEDIAKIT_OR_DRIVE_LINK]]">Media Kit / Reel</a>
+        </div>
+
+        <div class="tags">
+          <span class="tag">Short-form Ads</span>
+          <span class="tag">TikTok / Reels</span>
+          <span class="tag">YouTube Long</span>
+          <span class="tag">Motion / Graphic</span>
+          <span class="tag">Strategy-led Editing</span>
+        </div>
+      </div>
+
+      <div class="card right">
+        <div class="mini">
+          <h3>เหมาะกับ</h3>
+          <p>[[แบรนด์/คลินิก/เฟอร์นิเจอร์/เอเจนซี่]] ที่ต้องการ “คอนเทนต์ดูแพง” และ “ปิดงานได้”</p>
+        </div>
+
+        <div class="stats">
+          <div class="mini stat">
+            <div class="num">[[X+]]</div>
+            <div class="lbl">โปรเจกต์ / แคมเปญ</div>
+          </div>
+          <div class="mini stat">
+            <div class="num">[[Y]]</div>
+            <div class="lbl">ปีประสบการณ์</div>
+          </div>
+          <div class="mini stat">
+            <div class="num">[[Z]]</div>
+            <div class="lbl">แบรนด์ที่เคยทำ</div>
+          </div>
+        </div>
+
+        <div class="mini">
+          <h3>จุดแข็ง</h3>
+          <p>[[คุมจังหวะ • โครงเรื่อง • สี/เสียง • ทำงานไว • ส่งไฟล์เป็นระบบ]]</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORK -->
+    <section id="work" class="section">
+      <h2>Featured Work</h2>
+      <p class="lead">ใส่ 6 งาน “ที่อยากได้งานแบบนั้นเพิ่ม”</p>
+
+      <div class="work">
+        <div class="card w">
+          <div class="thumb">[[THUMB 16:9]]</div>
+          <div class="meta">
+            <span class="pill">Ads 15s</span><span class="pill">TikTok</span><span class="pill">Clinic</span>
+          </div>
+          <div>
+            <h3>[[ชื่อชิ้นงาน #1]]</h3>
+            <p>[[โจทย์ + สิ่งที่ทำ 1 บรรทัด]]</p>
+          </div>
+          <a class="link" href="[[LINK_TO_VIDEO_1]]" target="_blank" rel="noreferrer">Watch</a>
+        </div>
+
+        <div class="card w">
+          <div class="thumb">[[THUMB 16:9]]</div>
+          <div class="meta">
+            <span class="pill">Reels 30s</span><span class="pill">Branding</span><span class="pill">Furniture</span>
+          </div>
+          <div>
+            <h3>[[ชื่อชิ้นงาน #2]]</h3>
+            <p>[[โจทย์ + สิ่งที่ทำ 1 บรรทัด]]</p>
+          </div>
+          <a class="link" href="[[LINK_TO_VIDEO_2]]" target="_blank" rel="noreferrer">Watch</a>
+        </div>
+
+        <div class="card w">
+          <div class="thumb">[[THUMB 16:9]]</div>
+          <div class="meta">
+            <span class="pill">YouTube 8–12m</span><span class="pill">Story</span><span class="pill">Cutdown</span>
+          </div>
+          <div>
+            <h3>[[ชื่อชิ้นงาน #3]]</h3>
+            <p>[[โจทย์ + สิ่งที่ทำ 1 บรรทัด]]</p>
+          </div>
+          <a class="link" href="[[LINK_TO_VIDEO_3]]" target="_blank" rel="noreferrer">Watch</a>
+        </div>
+
+        <div class="card w">
+          <div class="thumb">[[THUMB 16:9]]</div>
+          <div class="meta">
+            <span class="pill">Motion</span><span class="pill">Graphic</span><span class="pill">Promo</span>
+          </div>
+          <div>
+            <h3>[[ชื่อชิ้นงาน #4]]</h3>
+            <p>[[โจทย์ + สิ่งที่ทำ 1 บรรทัด]]</p>
+          </div>
+          <a class="link" href="[[LINK_TO_VIDEO_4]]" target="_blank" rel="noreferrer">Watch</a>
+        </div>
+
+        <div class="card w">
+          <div class="thumb">[[THUMB 16:9]]</div>
+          <div class="meta">
+            <span class="pill">Before/After</span><span class="pill">Hook</span><span class="pill">UGC</span>
+          </div>
+          <div>
+            <h3>[[ชื่อชิ้นงาน #5]]</h3>
+            <p>[[โจทย์ + สิ่งที่ทำ 1 บรรทัด]]</p>
+          </div>
+          <a class="link" href="[[LINK_TO_VIDEO_5]]" target="_blank" rel="noreferrer">Watch</a>
+        </div>
+
+        <div class="card w">
+          <div class="thumb">[[THUMB 16:9]]</div>
+          <div class="meta">
+            <span class="pill">Conversion</span><span class="pill">Ads</span><span class="pill">Landing</span>
+          </div>
+          <div>
+            <h3>[[ชื่อชิ้นงาน #6]]</h3>
+            <p>[[โจทย์ + สิ่งที่ทำ 1 บรรทัด]]</p>
+          </div>
+          <a class="link" href="[[LINK_TO_VIDEO_6]]" target="_blank" rel="noreferrer">Watch</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CASES -->
+    <section id="cases" class="section">
+      <h2>Case Studies</h2>
+      <p class="lead">2 เคสก็พอ แต่ต้องมี “ปัญหา → วิธีแก้ → ผลลัพธ์”</p>
+
+      <div class="grid cols2">
+        <div class="card case">
+          <div class="top">
+            <div>
+              <h3>[[Case #1: แบรนด์/แคมเปญ]]</h3>
+              <div class="k">บทบาท: [[ตัดต่อ • วางโครง • ทำโมชั่น • ทำแอด]]</div>
+            </div>
+            <div class="pill">Result: [[ตัวเลข/สิ่งที่วัดได้]]</div>
+          </div>
+          <div class="case cols">
+            <div class="box"><b>Problem</b><span>[[ปัญหา 1 บรรทัด]]</span></div>
+            <div class="box"><b>Solution</b><span>[[ทำอะไรให้ดีขึ้น 1–2 บรรทัด]]</span></div>
+            <div class="box"><b>Result</b><span>[[วิว/CTR/ยอดทัก/Watch time/Lead]]</span></div>
+          </div>
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap">
+            <a class="btn" href="[[BEFORE_AFTER_LINK_1]]" target="_blank" rel="noreferrer">Before/After</a>
+            <a class="btn gold" href="[[FULL_CASE_LINK_1]]" target="_blank" rel="noreferrer">ดูงานเต็ม</a>
+          </div>
+        </div>
+
+        <div class="card case">
+          <div class="top">
+            <div>
+              <h3>[[Case #2: แบรนด์/แคมเปญ]]</h3>
+              <div class="k">บทบาท: [[ตัดต่อ • ครีเอทีฟ • ทำแพ็กคอนเทนต์]]</div>
+            </div>
+            <div class="pill">Result: [[ตัวเลข/สิ่งที่วัดได้]]</div>
+          </div>
+          <div class="case cols">
+            <div class="box"><b>Problem</b><span>[[ปัญหา 1 บรรทัด]]</span></div>
+            <div class="box"><b>Solution</b><span>[[ทำอะไรให้ดีขึ้น 1–2 บรรทัด]]</span></div>
+            <div class="box"><b>Result</b><span>[[วิว/CTR/ยอดทัก/Watch time/Lead]]</span></div>
+          </div>
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap">
+            <a class="btn" href="[[BEFORE_AFTER_LINK_2]]" target="_blank" rel="noreferrer">Before/After</a>
+            <a class="btn gold" href="[[FULL_CASE_LINK_2]]" target="_blank" rel="noreferrer">ดูงานเต็ม</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services" class="section">
+      <h2>Services</h2>
+      <p class="lead">พูดให้ชัดว่า “เลือกอันไหนแล้วได้อะไร”</p>
+
+      <div class="grid cols3">
+        <div class="card item">
+          <h3>Short-form Ads / Reels</h3>
+          <p>Hook • Structure • Sub • Rhythm • CTA เหมาะกับ: เพิ่มยอดทัก/ขายโปร</p>
+        </div>
+        <div class="card item">
+          <h3>YouTube Long + Cutdowns</h3>
+          <p>ทำคลิปยาวเล่าเรื่องลื่น + แตกคลิปสั้น 3–5 ชิ้นได้</p>
+        </div>
+        <div class="card item">
+          <h3>Motion / Graphic</h3>
+          <p>ไทโป/อินโฟ/คีย์วิชวล ให้ภาพดูแพงและสื่อสารชัด</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORKFLOW -->
+    <section class="section">
+      <div class="card process">
+        <h2>Workflow</h2>
+        <p class="lead">ทำให้โปรเจกต์ไม่มั่ว และลดรอบแก้แบบมีเหตุผล</p>
+
+        <div class="steps">
+          <div class="card step">
+            <div class="n">01 / Brief</div>
+            <h4>เป้าหมาย + เดดไลน์</h4>
+            <p>ต้องการยอดทัก/ภาพลักษณ์/ยอดขาย + ref</p>
+          </div>
+          <div class="card step">
+            <div class="n">02 / Draft</div>
+            <h4>ล็อกทิศทางเร็ว</h4>
+            <p>Hook/จังหวะ/โทน ก่อนลงรายละเอียด</p>
+          </div>
+          <div class="card step">
+            <div class="n">03 / Polish</div>
+            <h4>เก็บภาพ-เสียง</h4>
+            <p>ซับ • สี • เสียง • โมชั่น • pacing</p>
+          </div>
+          <div class="card step">
+            <div class="n">04 / Deliver</div>
+            <h4>ส่งไฟล์เป็นระบบ</h4>
+            <p>เวอร์ชัน + สัดส่วน + ไฟล์ต้นฉบับ (ตามแพ็ก)</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing" class="section">
+      <h2>Pricing</h2>
+      <p class="lead">ตั้งเป็น “ช่วงราคา” ก่อนก็ได้ จะดูเป็นมืออาชีพกว่าไม่บอกราคาเลย</p>
+
+      <div class="card price">
+        <div class="cards">
+          <div class="card pc">
+            <div class="t"><h3>Starter</h3><div class="range">[[฿X,XXX–X,XXX]]</div></div>
+            <ul>
+              <li>[[คลิปสั้น 1 ชิ้น]]</li>
+              <li>[[ซับ/มูฟ/เสียง]]</li>
+              <li>[[แก้ 2 รอบ]]</li>
+            </ul>
+          </div>
+          <div class="card pc">
+            <div class="t"><h3>Growth</h3><div class="range">[[฿X,XXX–XX,XXX]]</div></div>
+            <ul>
+              <li>[[แพ็ก 3–6 ชิ้น]]</li>
+              <li>[[ช่วยวาง Hook/Structure]]</li>
+              <li>[[ทำ Thumbnail/Key Visual]]</li>
+            </ul>
+          </div>
+          <div class="card pc">
+            <div class="t"><h3>Campaign</h3><div class="range">[[Custom]]</div></div>
+            <ul>
+              <li>[[หลายเวอร์ชัน A/B]]</li>
+              <li>[[Motion/Graphic เต็ม]]</li>
+              <li>[[หลายสัดส่วนสำหรับยิงแอด]]</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap">
+          <a class="btn primary" href="[[LINE_LINK]]">ขอใบเสนอราคา</a>
+          <a class="btn gold" href="[[BRIEF_FORM_LINK]]">กรอกบรีฟ 1 นาที</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section">
+      <div class="card faq">
+        <h2>FAQ</h2>
+        <details>
+          <summary>ไม่มีฟุตเทจทำได้ไหม?</summary>
+          <p>[[ได้: ใช้ stock / motion / ขอถ่ายเพิ่ม / วางรูปแบบให้เข้ากับงาน]]</p>
+        </details>
+        <details>
+          <summary>แก้กี่รอบ?</summary>
+          <p>[[ตามแพ็ก: 2 รอบ / รอบเพิ่มคิดเพิ่ม]]</p>
+        </details>
+        <details>
+          <summary>ส่งไฟล์อะไรให้บ้าง?</summary>
+          <p>[[ไฟล์ final หลายสัดส่วน + ไฟล์ต้นฉบับตามแพ็ก]]</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section">
+      <h2>Contact</h2>
+      <p class="lead">ทางเร็วสุดคือทักไลน์ (ถ้าจะให้ไว ส่ง งบ + เดดไลน์ + ตัวอย่างงานที่ชอบ)</p>
+
+      <div class="card contact">
+        <div class="box2">
+          <h3 style="margin:0 0 8px">ช่องทาง</h3>
+          <p style="margin:0; color:var(--muted)">
+            LINE: <a class="smalllink" href="[[LINE_LINK]]">[[LINE_ID_OR_LINK]]</a><br/>
+            Email: <a class="smalllink" href="mailto:[[EMAIL]]">[[EMAIL]]</a><br/>
+            IG/FB: <a class="smalllink" href="[[SOCIAL_LINK]]">[[SOCIAL_HANDLE]]</a>
+          </p>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap">
+            <a class="btn primary" href="[[LINE_LINK]]">ทักไลน์ตอนนี้</a>
+            <a class="btn gold" href="[[BRIEF_FORM_LINK]]">ฟอร์มบรีฟ</a>
+          </div>
+
+          <div class="mini" style="margin-top:12px">
+            <h3>บรีฟที่ทำให้จบไว</h3>
+            <p>งบ / เดดไลน์ / เป้าหมาย / ตัวอย่างคลิปที่ชอบ / ลิงก์เพจ</p>
+          </div>
+        </div>
+
+        <div class="box2">
+          <h3 style="margin:0 0 8px">ฟอร์มตัวอย่าง</h3>
+          <label>ชื่อ / แบรนด์</label>
+          <input placeholder="[[ชื่อคุณ]] / [[ชื่อแบรนด์]]" />
+          <label>งบประมาณคร่าวๆ</label>
+          <input placeholder="เช่น 5,000 / 15,000 / 30,000 บาท" />
+          <label>เดดไลน์</label>
+          <input placeholder="เช่น 10 มี.ค. 2569" />
+          <label>อธิบายงานสั้นๆ</label>
+          <textarea placeholder="โจทย์คือ... ต้องการผลลัพธ์แบบ... ลิงก์งานอ้างอิง..."></textarea>
+
+          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap">
+            <a class="btn primary" href="[[BRIEF_FORM_LINK]]">ส่งผ่านฟอร์มจริง</a>
+            <a class="btn" href="[[LINE_LINK]]">ส่งผ่านไลน์</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <div>© <span id="y"></span> [[COPTER]] — Cinematic Portfolio</div>
+        <div>
+          <a class="smalllink" href="#work">Work</a> ·
+          <a class="smalllink" href="#cases">Cases</a> ·
+          <a class="smalllink" href="#pricing">Pricing</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
